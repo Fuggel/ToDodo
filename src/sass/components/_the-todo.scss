@@ -1,0 +1,143 @@
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//
+// NEW TODO
+//
+*/ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /////////////////////////////////
+    // FORM
+    /////////////////////////////////
+
+    .form-container {
+
+        @include box-shadow;
+
+        background-color:   $colorTodoCard;
+        padding:            50px 20px;
+        border-radius:      0 0 10px 10px;
+        min-width:          475px;
+
+        form > div {
+
+            @include border-radius;
+            @include box-shadow;
+
+            margin-bottom:      20px;
+            padding:            20px;
+            background-color:   $colorTodoHeader;
+            font-size:          1.2rem;
+            
+        }
+    }
+
+
+    /////////////////////////////////
+    // ADD TODO
+    /////////////////////////////////
+
+    .add-todo > input {
+
+        @include border-black;
+
+        font-size:      1.1rem;
+        margin:         20px auto;
+        border-radius:  10px 0 0 10px;
+        padding:        8px;
+    }
+
+    input:focus { outline: none; }
+
+    .add-button { 
+
+        background-color:       #fff;
+        margin:                 -1px;
+        border-radius:          0 10px 10px 0;
+    }
+
+    .add-button:hover { background-color: $colorTodoBtnHover; }
+
+
+    /////////////////////////////////
+    // ACTIVE TODOS
+    /////////////////////////////////
+
+    .no-todos {
+
+        font:           normal 20px/20px $fontFamily;
+        margin-top:     10px;
+    }
+
+    .active-todo {
+
+        max-height:     500px;
+        overflow:       auto;
+    }
+
+    .active-todo p { 
+
+        @include border-radius;
+        @include transition;
+        @include border-black;
+
+        display:            flex;
+        justify-content:    space-between;
+        align-items:        center;
+
+        margin:             15px 0;
+        padding:            0 0 0 8px;
+        background-color:   #fff;
+        color:              #000;
+        font:               normal 18px/18px $fontFamily;
+        cursor:             pointer;
+        word-wrap:          break-word;
+
+        .remove {
+
+           margin-right: 0;
+           padding: 10px 20px;
+           border-radius: 0 10px 10px 0;
+           border: none;
+        }
+    }
+
+
+
+    /////////////////////////////////
+    // DELETE ALL
+    /////////////////////////////////
+
+    .delete-button {
+
+        background-color:       $colorTodoCta;
+        color:                  #fff;
+    }
+
+    .delete-button:hover { background-color: $colorTodoCtaHover; }
+
+
+
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//
+// MOBILE
+//
+*/ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    @media only screen and (max-width: 414px) {
+
+        .form-container         { min-width: 300px; }
+        .add-todo > input       { border-radius:  10px; }
+
+        .add-button {
+
+            border-radius: 10px; 
+            margin: 0;
+        }
+
+        .active-todo {
+
+            max-height:     200px;
+            overflow:       auto;
+        }
+    }
