@@ -141,3 +141,14 @@
             overflow:       auto;
         }
     }
+
+    @media only screen and (max-width: 320px) {
+
+        .form-container {
+
+            min-width: 300px; 
+            border-radius: 0; 
+        }
+
+        .active-todo { max-height: 150px; }
+    }
