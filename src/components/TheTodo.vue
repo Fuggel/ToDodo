@@ -1,8 +1,8 @@
-<!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //    HTML
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 
 
 <template>
@@ -22,10 +22,14 @@
             <div class="active-todo">
                 <h3>Active ToDo's: <span v-if="count > 0">{{ count }}</span></h3>
                 <h4 class="no-todos" v-if="activeTodo.length === 0">No todo's added yet</h4>
-                <p v-else v-for="(activeTodos, idx) in activeTodo" :key="activeTodos">
-                    {{ activeTodos }}
-                    <button class="delete-button remove" @click.prevent="removeActiveTodo(idx)"><span>&#10005;</span></button>
-                </p>
+                <div class="active-todo-content" v-else v-for="(listItem, idx) in activeTodo" :key="listItem">
+                    <p :style="listItem.done ? 'text-decoration: line-through; color: #888;' : 'text-decoration: none'" @click="toggleTodo(listItem)">
+                        {{ listItem.todoItem }}
+                    </p>
+                    <button type="button" class="delete-button remove" @click="removeActiveTodo(idx)">
+                        <span>&#10005;</span>
+                    </button>
+                </div>
             </div>
 
             <!-- DELETE ALL -->
@@ -39,11 +43,11 @@
 
 
 
-<!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //    JAVASCRIPT
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 
 
 <script>
@@ -58,14 +62,7 @@
         return {
             newTodo: "",
             activeTodo: [],
-            count: 0,
         };
-      },
-
-      watch: {
-
-          activeTodo()  { localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo)) },
-          count()       { localStorage.setItem("count", JSON.stringify(this.count)) },
       },
 
 
@@ -75,49 +72,53 @@
 
       mounted() {
 
-          let activeTodo =      localStorage.getItem("activeTodo")
-          let count =           localStorage.getItem("count")
-          
-          if (activeTodo)       { this.activeTodo = JSON.parse(activeTodo) }
-          if (count)            { this.count = JSON.parse(count) }
+        let activeTodo = localStorage.getItem("activeTodo")
+        if (activeTodo) { this.activeTodo = JSON.parse(activeTodo); }
       },
 
       /////////////////////////////////
       // METHODS
       /////////////////////////////////
 
+      computed: {
+
+        count() { return this.activeTodo.length; }
+      },
+
       methods: {
 
           addNewActive() {
 
-            if(this.newTodo.length === 0) { return; }
+            if (this.newTodo.length === 0) return;
 
-            this.activeTodo.push(this.newTodo);
-            this.count++;
+            this.activeTodo.push({ "todoItem" : this.newTodo, "done": false });
             this.newTodo = "";
 
             localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
-            localStorage.setItem("count", JSON.stringify(this.count))
         },
 
         removeActiveTodo(idx) { 
 
             this.activeTodo.splice(idx, 1); 
-            this.count--; 
 
             localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
-            localStorage.setItem("count", JSON.stringify(this.count))
         },
 
         clearAllTodos() {
 
             this.activeTodo = [];
+            this.count = 0;
 
             localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
-            localStorage.setItem("count", JSON.stringify(this.count))
 
-            this.count = 0;
         },
+
+        toggleTodo(listItem) {
+
+            listItem.done = !listItem.done; 
+            
+            localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
+        }
 
       },
 
