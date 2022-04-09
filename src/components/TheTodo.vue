@@ -14,8 +14,10 @@
             <!-- ADD TODO -->
             <div class="add-todo">
                 <h3>Add New ToDo</h3>
-                <input type="text" v-model="newTodo" placeholder="What needs to be done?">
-                <button class="add-button" @click.prevent="addNewActive"><span>&#10011;</span></button>
+                <div class="add-todo-field">
+                    <input type="text" v-model="newTodo" placeholder="What needs to be done?">
+                    <button class="add-button" @click.prevent="addNewActive"><span>&#10011;</span></button>
+                </div>
             </div>
 
             <!-- ACTIVE TODO -->
