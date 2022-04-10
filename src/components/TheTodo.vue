@@ -25,7 +25,7 @@
                 <h3>Active ToDo's: <span v-if="count > 0">{{ count }}</span></h3>
                 <h4 class="no-todos" v-if="activeTodo.length === 0">No todo's added yet</h4>
                 <div class="active-todo-content" v-else v-for="(listItem, idx) in activeTodo" :key="listItem">
-                    <p :style="listItem.done ? 'text-decoration: line-through; color: #888;' : 'text-decoration: none'" @click="toggleTodo(listItem)">
+                    <p :class="listItem.done ? 'todo-done' : ''" @click="toggleTodo(listItem)">
                         {{ listItem.todoItem }}
                     </p>
                     <button type="button" class="delete-button remove" @click="removeActiveTodo(idx)">
@@ -109,7 +109,6 @@
         clearAllTodos() {
 
             this.activeTodo = [];
-            this.count = 0;
 
             localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
 
@@ -118,7 +117,7 @@
         toggleTodo(listItem) {
 
             listItem.done = !listItem.done; 
-            
+
             localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
         }
 
