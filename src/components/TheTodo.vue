@@ -16,7 +16,7 @@
                 <h3>Add New ToDo</h3>
                 <div class="add-todo-field">
                     <input type="text" v-model="newTodo" placeholder="What needs to be done?">
-                    <button class="add-button" @click.prevent="addNewActive"><span>&#10011;</span></button>
+                    <button class="add-button" @click.prevent="addNewActive"><i class="fa-solid fa-plus"></i></button>
                 </div>
             </div>
 
@@ -29,7 +29,7 @@
                         {{ listItem.todoItem }}
                     </p>
                     <button type="button" class="delete-button remove" @click="removeActiveTodo(idx)">
-                        <span>&#10005;</span>
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             </div>
@@ -91,7 +91,7 @@
 
           addNewActive() {
 
-            if (this.newTodo.length === 0) return;
+            if (this.newTodo.trim() === "") return;
 
             this.activeTodo.push({ "todoItem" : this.newTodo, "done": false });
             this.newTodo = "";
