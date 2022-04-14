@@ -21,17 +21,17 @@
       font-family:    $fontFamily;
       color:          #fff;
       text-align:     center;
-  }
+    }
 
-  button {
+    button {
 
-    @include transition;
-    @include border-black;
+      @include transition;
+      @include border-black;
 
-    margin:           0 10px;
-    cursor:           pointer;
-    padding:          10px 20px;
-    border-radius:    10px;
-    font-weight:      600;
-}
+      margin:           0 10px;
+      cursor:           pointer;
+      padding:          10px 20px;
+      border-radius:    10px;
+      font-weight:      600;
+    }
 

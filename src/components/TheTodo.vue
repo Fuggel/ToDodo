@@ -15,9 +15,10 @@
             <div class="add-todo">
                 <h3>Add New ToDo</h3>
                 <div class="add-todo-field">
-                    <input type="text" v-model="newTodo" placeholder="What needs to be done?">
+                    <input class="todo-input" type="text" v-model="newTodo" placeholder="What needs to be done?">
                     <button class="add-button" @click.prevent="addNewActive"><i class="fa-solid fa-plus"></i></button>
                 </div>
+                    <input class="date-input" type="date" v-model="newDate">
             </div>
 
             <!-- ACTIVE TODO -->
@@ -25,8 +26,9 @@
                 <h3>Active ToDo's: <span v-if="count > 0">{{ count }}</span></h3>
                 <h4 class="no-todos" v-if="activeTodo.length === 0">No todo's added yet</h4>
                 <div class="active-todo-content" v-else v-for="(listItem, idx) in activeTodo" :key="listItem">
-                    <p :class="listItem.done ? 'todo-done' : ''" @click="toggleTodo(listItem)">
-                        {{ listItem.todoItem }}
+                    <p @click="toggleTodo(listItem)">
+                        <span :class="listItem.done ? 'todo-done' : ''">{{ listItem.todoItem }}</span> 
+                        <span class="todo-date" :class="listItem.done ? 'todo-done-date' : ''">{{ listItem.todoDate }}</span>
                     </p>
                     <button type="button" class="delete-button remove" @click="removeActiveTodo(idx)">
                         <i class="fa-solid fa-xmark"></i>
@@ -63,6 +65,7 @@
       data() {
         return {
             newTodo: "",
+            newDate: "",
             activeTodo: [],
         };
       },
@@ -84,7 +87,7 @@
 
       computed: {
 
-        count() { return this.activeTodo.length; }
+        count() { return this.activeTodo.length; },
       },
 
       methods: {
@@ -93,15 +96,16 @@
 
             if (this.newTodo.trim() === "") return;
 
-            this.activeTodo.push({ "todoItem" : this.newTodo, "done": false });
+            this.activeTodo.push({ "todoItem" : this.newTodo, "todoDate": this.newDate, "done": false });
             this.newTodo = "";
+            this.newDate = "";
 
             localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
         },
 
         removeActiveTodo(idx) { 
 
-            this.activeTodo.splice(idx, 1); 
+            this.activeTodo.splice(idx, 1);
 
             localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
         },
@@ -111,7 +115,6 @@
             this.activeTodo = [];
 
             localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
-
         },
 
         toggleTodo(listItem) {
@@ -119,7 +122,7 @@
             listItem.done = !listItem.done; 
 
             localStorage.setItem("activeTodo", JSON.stringify(this.activeTodo))
-        }
+        },
 
       },
 
