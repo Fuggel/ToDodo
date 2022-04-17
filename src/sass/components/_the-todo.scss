@@ -56,18 +56,6 @@
         input:focus { outline: none; }
     }
 
-    .date-input {
-        @include border-black;
-        @include border-radius;
-        padding:        8px;
-    }
-
-    .date-input:focus {outline: none;}
-
-    .date-container {
-        display: block;
-    }
-
     .add-button { 
 
         background-color:       #fff;
@@ -117,16 +105,6 @@
             width:              100%;
         }
 
-        .todo-date {
-
-            @include border-black;
-
-            border-radius: 5px;
-            background-color: $colorTodoHeader;
-            padding: 2px 6px;
-            font: bold 12px/12px $fontFamily;
-        }
-
         .remove {
             
             margin-right:   0;
@@ -140,8 +118,6 @@
             color:              $colorTodoDone;
             text-decoration:    line-through;
         }
-
-        .todo-done-date { background-color: $colorTodoDone; }
     }
 
     ///////////////////////////////////
