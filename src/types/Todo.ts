@@ -3,5 +3,6 @@ export interface Todo {
     task: string;
     startDate: string;
     endDate: string;
-    repeatTask: string;
+    repeatInterval: string | null;
+    hiddenUntil?: string;
 }

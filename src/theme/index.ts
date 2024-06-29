@@ -12,7 +12,7 @@ export const themeLight = createTheme({
         },
         text: {
             primary: "#333",
-            secondary: "#666",
+            secondary: "#007AFF",
         },
         background: {
             default: "#F9F9F9",

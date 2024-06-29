@@ -23,7 +23,7 @@ export const routeConfig: RouteConfig[] = [
         element: AddTodo,
     },
     {
-        path: "/edit",
+        path: "/edit/:id",
         element: EditTodo,
     },
     {

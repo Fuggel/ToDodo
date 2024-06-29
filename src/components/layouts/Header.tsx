@@ -1,45 +1,36 @@
 import React from "react";
-import { Box, IconButton, Toolbar, Typography, styled } from "@mui/material";
-import { headerConfig } from "../../config/headerConfig";
-import { Link, useLocation } from "react-router-dom";
+import { Box, IconButton, Tooltip, useTheme } from "@mui/material";
+import { Link } from "react-router-dom";
 import { Home } from "@mui/icons-material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { StyledBoxFlexBetween } from "../../styles";
 
 
 const Header: React.FC = () => {
-    const location = useLocation();
-    const currRoute = headerConfig.find((r) => r.path === location.pathname);
+    const theme = useTheme();
 
     return (
         <Box sx={{ mt: "1rem" }}>
-            <StyledBox>
+            <StyledBoxFlexBetween sx={{ px: 2, py: 1 }}>
                 <Link to="/">
-                    <IconButton>
-                        <Home sx={{ fontSize: "2rem" }} />
-                    </IconButton>
+                    <Tooltip title={"Home"} arrow>
+                        <IconButton>
+                            <Home sx={{ color: theme.palette.primary.main, fontSize: "2.5rem" }} />
+                        </IconButton>
+                    </Tooltip>
                 </Link>
 
                 <Link to="/add">
-                    <Typography variant="subtitle1" component="p">
-                        Add ToDo
-                    </Typography>
+                    <Tooltip title={"Add New Task"} arrow>
+                        <IconButton>
+                            <AddCircleIcon sx={{ color: theme.palette.primary.main, fontSize: "2.5rem" }} />
+                        </IconButton>
+                    </Tooltip>
                 </Link>
-            </StyledBox>
-
-            <Toolbar disableGutters>
-                <Typography variant="h4" component="h1">
-                    {currRoute?.title}
-                </Typography>
-            </Toolbar>
+            </StyledBoxFlexBetween>
         </Box>
     );
 };
-
-const StyledBox = styled(Box)(() => ({
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "1rem",
-}));
 
 
 export default Header;
