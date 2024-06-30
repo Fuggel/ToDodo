@@ -14,6 +14,7 @@ import { StyledBoxFlex, StyledBoxFlexBetween, StyledBoxFlexColumn, StyledDescrip
 import Card from "../components/ui/Card";
 import dayjs from "dayjs";
 import Icon from "../components/ui/Icon";
+import { RepeatFrequency, Todo } from "../types/Todo";
 
 
 const TodoList: React.FC = () => {
@@ -21,6 +22,27 @@ const TodoList: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const todos = useSelector(selectTodo);
+
+    const displayedFrequency = (todo: Todo) => {
+        switch (todo.repeat?.frequency) {
+            case RepeatFrequency.Daily:
+                return "days";
+            case RepeatFrequency.Weekly:
+                return "weeks";
+            case RepeatFrequency.Monthly:
+                return "months";
+            case RepeatFrequency.Yearly:
+                return "years";
+        }
+    };
+
+    if (todos.length === 0) {
+        return (
+            <Card>
+                <StyledTitle sx={{ textAlign: "center", my: 2 }}>No tasks left. 🥳</StyledTitle>
+            </Card>
+        );
+    }
 
     return (
         <Card>
@@ -30,12 +52,14 @@ const TodoList: React.FC = () => {
                         <StyledBoxFlex>
                             <StyledTitle>{todo.task}</StyledTitle>
 
-                            {todo.repeatInterval &&
+                            {todo.repeat && (
                                 <React.Fragment>
-                                    <LoopIcon sx={{ color: "#888" }} />
-                                    <StyledDescription>{todo.repeatInterval}</StyledDescription>
+                                    <LoopIcon sx={{ color: "#888", mr: 1 }} />
+                                    <StyledDescription>
+                                        Every {todo.repeat.interval} {displayedFrequency(todo)}
+                                    </StyledDescription>
                                 </React.Fragment>
-                            }
+                            )}
                         </StyledBoxFlex>
 
                         <StyledBoxFlexColumn>
@@ -70,14 +94,14 @@ const TodoList: React.FC = () => {
                         </Box>
 
                         <Box>
-                            {todo.repeatInterval &&
+                            {todo.repeat && (
                                 <Icon
                                     label="Delete Task"
                                     onClick={() => dispatch(appViewActions.permanentlyDeleteTodo(todo.id))}
                                     icon={<DeleteForeverIcon sx={{ fontSize: "2rem" }} />}
                                     type="caution"
                                 />
-                            }
+                            )}
                         </Box>
                     </StyledBoxFlexBetween>
 

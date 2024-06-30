@@ -4,7 +4,7 @@ import TodoForm from "../components/TodoForm";
 import dayjs, { Dayjs } from "dayjs";
 import { useDispatch } from "react-redux";
 import { appViewActions } from "../store/appView";
-import { Todo } from "../types/Todo";
+import { RepeatFrequency, Todo } from "../types/Todo";
 import { useNavigate } from "react-router-dom";
 import Toast from "../components/ui/Toast";
 
@@ -16,7 +16,8 @@ const AddTodo: React.FC = () => {
     const [task, setTask] = useState("");
     const [startDate, setStartDate] = useState<Dayjs | null>(null);
     const [endDate, setEndDate] = useState<Dayjs | null>(null);
-    const [repeatInterval, setRepeatInterval] = useState<string | null>(null);
+    const [repeatFrequency, setRepeatFrequency] = useState<RepeatFrequency | undefined>(undefined);
+    const [repeatInterval, setRepeatInterval] = useState<number | undefined>(undefined);
 
     const handleAddTodo = () => {
         if (!task) return;
@@ -26,7 +27,7 @@ const AddTodo: React.FC = () => {
             task,
             startDate: startDate?.toISOString() ?? dayjs().toISOString(),
             endDate: endDate?.toISOString() ?? "",
-            repeatInterval: repeatInterval ?? "",
+            repeat: repeatFrequency ? { frequency: repeatFrequency, interval: repeatInterval } : undefined,
         };
 
         dispatch(appViewActions.addTodo([todo]));
@@ -47,6 +48,8 @@ const AddTodo: React.FC = () => {
                 setStartDate={setStartDate}
                 endDate={endDate}
                 setEndDate={setEndDate}
+                repeatFrequency={repeatFrequency}
+                setRepeatFrequency={setRepeatFrequency}
                 repeatInterval={repeatInterval}
                 setRepeatInterval={setRepeatInterval}
                 submitAction={handleAddTodo}

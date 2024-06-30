@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
-import { Todo } from "../types/Todo";
+import { RepeatFrequency, Todo } from "../types/Todo";
 import dayjs, { Dayjs } from "dayjs";
 
 
@@ -21,40 +21,13 @@ const appViewSlice = createSlice({
         },
 
         deleteTodo: (state, action: PayloadAction<string>) => {
-            const index = state.todos.findIndex(todo => todo.id === action.payload);
+            const index = state.todos.findIndex((todo) => todo.id === action.payload);
             if (index !== -1) {
                 const todo = state.todos[index];
-                const repeatInterval = todo.repeatInterval;
-
-                state.todos.splice(index, 1);
-
-                if (repeatInterval) {
-                    let nextDate: Dayjs | null = null;
-                    switch (repeatInterval) {
-                        case "minutely":
-                            nextDate = dayjs(todo.startDate).add(1, "minute");
-                            break;
-                        case "daily":
-                            nextDate = dayjs(todo.startDate).add(1, "day");
-                            break;
-                        case "weekly":
-                            nextDate = dayjs(todo.startDate).add(1, "week");
-                            break;
-                        case "monthly":
-                            nextDate = dayjs(todo.startDate).add(1, "month");
-                            break;
-                        case "yearly":
-                            nextDate = dayjs(todo.startDate).add(1, "year");
-                            break;
-                        default:
-                            break;
-                    }
-
-                    if (nextDate) {
-                        const newTodo = { ...todo, hiddenUntil: nextDate.toISOString() };
-                        state.hiddenTodos.push(newTodo);
-                    }
+                if (todo.repeat) {
+                    state.hiddenTodos.push(todo);
                 }
+                state.todos.splice(index, 1);
             }
         },
 
@@ -65,7 +38,7 @@ const appViewSlice = createSlice({
 
         checkHiddenTodos: (state) => {
             const now = dayjs();
-            state.hiddenTodos = state.hiddenTodos.filter(todo => {
+            state.hiddenTodos = state.hiddenTodos.filter((todo) => {
                 const hiddenUntil = dayjs(todo.hiddenUntil);
                 if (now.isAfter(hiddenUntil)) {
                     state.todos.push({ ...todo, hiddenUntil: undefined });
@@ -77,9 +50,41 @@ const appViewSlice = createSlice({
 
         updateTodo: (state, action: PayloadAction<Partial<Todo> & { id: string; }>) => {
             const { id, ...updates } = action.payload;
-            const todo = state.todos.find(todo => todo.id === id);
-            if (todo) {
-                Object.assign(todo, updates);
+            const todoIndex = state.todos.findIndex((todo) => todo.id === id);
+            if (todoIndex !== -1) {
+                const todo = state.todos[todoIndex];
+                const updatedTodo = {
+                    ...todo,
+                    ...updates,
+                };
+
+                if (updatedTodo.repeat?.frequency && updatedTodo.repeat?.interval) {
+                    let nextDate: Dayjs | null = null;
+                    const startDate = dayjs(updatedTodo.startDate);
+
+                    switch (updatedTodo.repeat.frequency) {
+                        case RepeatFrequency.Daily:
+                            nextDate = startDate.add(updatedTodo.repeat.interval, "day");
+                            break;
+                        case RepeatFrequency.Weekly:
+                            nextDate = startDate.add(updatedTodo.repeat.interval, "week");
+                            break;
+                        case RepeatFrequency.Monthly:
+                            nextDate = startDate.add(updatedTodo.repeat.interval, "month");
+                            break;
+                        case RepeatFrequency.Yearly:
+                            nextDate = startDate.add(updatedTodo.repeat.interval, "year");
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (nextDate) {
+                        updatedTodo.startDate = nextDate.toISOString();
+                    }
+                }
+
+                state.todos[todoIndex] = updatedTodo;
             }
         },
     },

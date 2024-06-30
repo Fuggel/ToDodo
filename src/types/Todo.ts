@@ -3,6 +3,16 @@ export interface Todo {
     task: string;
     startDate: string;
     endDate: string;
-    repeatInterval: string | null;
+    repeat?: {
+        frequency?: RepeatFrequency;
+        interval?: number;
+    };
     hiddenUntil?: string;
+}
+
+export enum RepeatFrequency {
+    Daily = "daily",
+    Weekly = "weekly",
+    Monthly = "monthly",
+    Yearly = "yearly",
 }

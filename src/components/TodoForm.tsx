@@ -7,6 +7,7 @@ import "dayjs/locale/de";
 import { useNavigate } from "react-router-dom";
 import { StyledBoxFlex, StyledBoxFlexWrapper } from "../styles";
 import Card from "./ui/Card";
+import { RepeatFrequency } from "../types/Todo";
 
 
 interface Props {
@@ -17,8 +18,10 @@ interface Props {
     setStartDate?: React.Dispatch<React.SetStateAction<Dayjs | null>>;
     endDate?: Dayjs | null;
     setEndDate?: React.Dispatch<React.SetStateAction<Dayjs | null>>;
-    repeatInterval?: string | null;
-    setRepeatInterval?: React.Dispatch<React.SetStateAction<string | null>>;
+    repeatFrequency?: RepeatFrequency | undefined;
+    setRepeatFrequency?: React.Dispatch<React.SetStateAction<RepeatFrequency | undefined>>;
+    repeatInterval?: number | undefined;
+    setRepeatInterval?: React.Dispatch<React.SetStateAction<number | undefined>>;
     submitAction: () => void;
 }
 
@@ -30,6 +33,8 @@ const TodoForm: React.FC<Props> = ({
     setStartDate,
     endDate,
     setEndDate,
+    repeatFrequency,
+    setRepeatFrequency,
     repeatInterval,
     setRepeatInterval,
     submitAction,
@@ -58,32 +63,42 @@ const TodoForm: React.FC<Props> = ({
                 />
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
                     <DateTimePicker
+                        disablePast
                         label="Start Date"
                         value={startDate}
                         onChange={(date) => setStartDate && setStartDate(date as Dayjs)}
-                        disablePast
                     />
                     <DateTimePicker
+                        disablePast
                         label="End Date"
                         value={endDate}
                         onChange={(date) => setEndDate && setEndDate(date as Dayjs)}
-                        disablePast
                     />
                 </LocalizationProvider>
 
+                {startDate &&
+                    <React.Fragment>
+                        <TextField
+                            select
+                            label="Repeat Frequency"
+                            value={repeatFrequency || ""}
+                            onChange={(e) => setRepeatFrequency && setRepeatFrequency(e.target.value as RepeatFrequency)}
+                        >
+                            <MenuItem value={RepeatFrequency.Daily}>Daily</MenuItem>
+                            <MenuItem value={RepeatFrequency.Weekly}>Weekly</MenuItem>
+                            <MenuItem value={RepeatFrequency.Monthly}>Monthly</MenuItem>
+                            <MenuItem value={RepeatFrequency.Yearly}>Yearly</MenuItem>
+                        </TextField>
 
-                <TextField
-                    select
-                    label="Repeat Interval"
-                    value={repeatInterval || ""}
-                    onChange={(e) => setRepeatInterval && setRepeatInterval(e.target.value)}
-                >
-                    <MenuItem value="minutely">Minutely</MenuItem>
-                    <MenuItem value="daily">Daily</MenuItem>
-                    <MenuItem value="weekly">Weekly</MenuItem>
-                    <MenuItem value="monthly">Monthly</MenuItem>
-                    <MenuItem value="yearly">Yearly</MenuItem>
-                </TextField>
+                        <TextField
+                            type="number"
+                            label="Repeat Interval"
+                            value={repeatInterval || ""}
+                            onChange={(e) => setRepeatInterval && setRepeatInterval(parseInt(e.target.value, 10))}
+                            helperText="Every n times the task should repeated. (e.g. 2 for every 2nd day)"
+                        />
+                    </React.Fragment>
+                }
 
                 {dateError && <Typography variant="body2" color="red">{dateError}</Typography>}
 
