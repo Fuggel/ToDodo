@@ -14,7 +14,7 @@ import { StyledBoxFlex, StyledBoxFlexBetween, StyledBoxFlexColumn, StyledDescrip
 import Card from "../components/ui/Card";
 import dayjs from "dayjs";
 import Icon from "../components/ui/Icon";
-import { RepeatFrequency, Todo } from "../types/Todo";
+import { displayedFrequency } from "../utils/displayFrequency";
 
 
 const TodoList: React.FC = () => {
@@ -22,19 +22,6 @@ const TodoList: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const todos = useSelector(selectTodo);
-
-    const displayedFrequency = (todo: Todo) => {
-        switch (todo.repeat?.frequency) {
-            case RepeatFrequency.Daily:
-                return "days";
-            case RepeatFrequency.Weekly:
-                return "weeks";
-            case RepeatFrequency.Monthly:
-                return "months";
-            case RepeatFrequency.Yearly:
-                return "years";
-        }
-    };
 
     if (todos.length === 0) {
         return (
@@ -54,10 +41,8 @@ const TodoList: React.FC = () => {
 
                             {todo.repeat && (
                                 <React.Fragment>
-                                    <LoopIcon sx={{ color: "#888", mr: 1 }} />
-                                    <StyledDescription>
-                                        Every {todo.repeat.interval} {displayedFrequency(todo)}
-                                    </StyledDescription>
+                                    <LoopIcon sx={{ color: "#888" }} />
+                                    <StyledDescription>{displayedFrequency(todo)}</StyledDescription>
                                 </React.Fragment>
                             )}
                         </StyledBoxFlex>
