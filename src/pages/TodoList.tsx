@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTodo, appViewActions } from "../store/appView";
-import { Box, Divider, IconButton, Tooltip, useTheme } from "@mui/material";
+import { Box, Divider, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { formatTime } from "../utils/date";
 import LoopIcon from '@mui/icons-material/Loop';
@@ -13,6 +13,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { StyledBoxFlex, StyledBoxFlexBetween, StyledBoxFlexColumn, StyledDescription, StyledTitle, flexAlignCenterColumn } from "../styles";
 import Card from "../components/ui/Card";
 import dayjs from "dayjs";
+import Icon from "../components/ui/Icon";
 
 
 const TodoList: React.FC = () => {
@@ -45,8 +46,8 @@ const TodoList: React.FC = () => {
 
                             {todo.endDate &&
                                 <StyledBoxFlex>
-                                    <AccessAlarmsIcon sx={{ color: dayjs().isAfter(todo.endDate) ? "#ff0000" : "#888" }} />
-                                    <StyledDescription sx={{ color: dayjs().isAfter(todo.endDate) ? "#ff0000" : "#888" }}>
+                                    <AccessAlarmsIcon sx={{ color: dayjs().isAfter(todo.endDate) ? theme.palette.error.main : "#888" }} />
+                                    <StyledDescription sx={{ color: dayjs().isAfter(todo.endDate) ? theme.palette.error.main : "#888" }}>
                                         {formatTime(todo.endDate)} Uhr
                                     </StyledDescription>
                                 </StyledBoxFlex>
@@ -56,25 +57,26 @@ const TodoList: React.FC = () => {
 
                     <StyledBoxFlexBetween>
                         <Box>
-                            <Tooltip title={"Edit Task"} arrow placement="top">
-                                <IconButton sx={{ color: theme.palette.primary.main }} onClick={() => navigate(`/edit/${todo.id}`)}>
-                                    <EditIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title={"Task Done"} arrow placement="top">
-                                <IconButton sx={{ color: theme.palette.primary.main }} onClick={() => dispatch(appViewActions.deleteTodo(todo.id))}>
-                                    <CheckCircleIcon />
-                                </IconButton>
-                            </Tooltip>
+                            <Icon
+                                label="Edit Task"
+                                onClick={() => navigate(`/edit/${todo.id}`)}
+                                icon={<EditIcon sx={{ fontSize: "2rem" }} />}
+                            />
+                            <Icon
+                                label="Task Done"
+                                onClick={() => dispatch(appViewActions.deleteTodo(todo.id))}
+                                icon={<CheckCircleIcon sx={{ fontSize: "2rem" }} />}
+                            />
                         </Box>
 
                         <Box>
                             {todo.repeatInterval &&
-                                <Tooltip title={"Delete Task Forever"} arrow placement="top">
-                                    <IconButton sx={{ color: "#ff0000" }} onClick={() => dispatch(appViewActions.permanentlyDeleteTodo(todo.id))}>
-                                        <DeleteForeverIcon />
-                                    </IconButton>
-                                </Tooltip>
+                                <Icon
+                                    label="Delete Task"
+                                    onClick={() => dispatch(appViewActions.permanentlyDeleteTodo(todo.id))}
+                                    icon={<DeleteForeverIcon sx={{ fontSize: "2rem" }} />}
+                                    type="caution"
+                                />
                             }
                         </Box>
                     </StyledBoxFlexBetween>
