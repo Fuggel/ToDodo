@@ -5,7 +5,6 @@ import { appViewActions, selectTodoById } from "../store/appView";
 import { RepeatFrequency, Todo } from "../types/Todo";
 import { useParams, useNavigate } from "react-router-dom";
 import TodoForm from "../components/TodoForm";
-import Toast from "../components/ui/Toast";
 import dayjs, { Dayjs } from "dayjs";
 
 
@@ -14,7 +13,6 @@ const EditTodo: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string; }>();
     const todo: Todo = useSelector((state: RootState) => selectTodoById(state, id as string));
-    const [showToast, setShowToast] = useState(false);
     const [task, setTask] = useState(todo.task);
     const [startDate, setStartDate] = useState<Dayjs | null>(todo?.startDate ? dayjs(todo.startDate) : null);
     const [endDate, setEndDate] = useState<Dayjs | null>(todo?.endDate ? dayjs(todo.endDate) : null);
@@ -46,34 +44,25 @@ const EditTodo: React.FC = () => {
             }
 
             dispatch(appViewActions.updateTodo(updatedTodo));
-            setShowToast(true);
-
-            setTimeout(() => {
-                navigate("/");
-            }, 2000);
+            navigate("/");
         }
     };
 
     return (
-        <React.Fragment>
-            <TodoForm
-                task={task}
-                setTask={setTask}
-                buttonAction="Save"
-                startDate={startDate}
-                setStartDate={setStartDate}
-                endDate={endDate}
-                setEndDate={setEndDate}
-                repeatFrequency={repeatFrequency}
-                setRepeatFrequency={setRepeatFrequency}
-                repeatInterval={repeatInterval}
-                setRepeatInterval={setRepeatInterval}
-                submitAction={handleSave}
-            />
-            {showToast &&
-                <Toast msg="Todo updated successfully!" />
-            }
-        </React.Fragment>
+        <TodoForm
+            task={task}
+            setTask={setTask}
+            buttonAction="Save"
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            repeatFrequency={repeatFrequency}
+            setRepeatFrequency={setRepeatFrequency}
+            repeatInterval={repeatInterval}
+            setRepeatInterval={setRepeatInterval}
+            submitAction={handleSave}
+        />
     );
 };
 

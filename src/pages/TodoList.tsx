@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTodo, appViewActions } from "../store/appView";
-import { Box, Divider, useTheme } from "@mui/material";
+import { Box, Button, Divider, Modal, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { formatTime } from "../utils/date";
 import LoopIcon from '@mui/icons-material/Loop';
@@ -10,11 +10,12 @@ import AccessAlarmsIcon from '@mui/icons-material/AccessAlarms';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { StyledBoxFlex, StyledBoxFlexBetween, StyledBoxFlexColumn, StyledDescription, StyledTitle, flexAlignCenterColumn } from "../styles";
+import { StyledBoxFlex, StyledBoxFlexBetween, StyledBoxFlexColumn, StyledDeleteBox, StyledDescription, StyledTitle, flexAlignCenterColumn } from "../styles";
 import Card from "../components/ui/Card";
 import dayjs from "dayjs";
 import Icon from "../components/ui/Icon";
 import { displayedFrequency } from "../utils/displayFrequency";
+import { Todo } from "../types/Todo";
 
 
 const TodoList: React.FC = () => {
@@ -22,6 +23,12 @@ const TodoList: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const todos = useSelector(selectTodo);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleDeleteTodo = (todo: Todo) => {
+        dispatch(appViewActions.deleteTodo(todo.id));
+        setShowModal(false);
+    };
 
     if (todos.length === 0) {
         return (
@@ -65,25 +72,23 @@ const TodoList: React.FC = () => {
                     </StyledBoxFlexBetween>
 
                     <StyledBoxFlexBetween>
+                        <Icon
+                            label="Task Done"
+                            onClick={() => dispatch(appViewActions.deleteTodo(todo.id))}
+                            icon={<CheckCircleIcon sx={{ fontSize: "2.5rem" }} />}
+                        />
+
                         <Box>
                             <Icon
                                 label="Edit Task"
                                 onClick={() => navigate(`/edit/${todo.id}`)}
-                                icon={<EditIcon sx={{ fontSize: "2rem" }} />}
+                                icon={<EditIcon sx={{ fontSize: "2.5rem" }} />}
                             />
-                            <Icon
-                                label="Task Done"
-                                onClick={() => dispatch(appViewActions.deleteTodo(todo.id))}
-                                icon={<CheckCircleIcon sx={{ fontSize: "2rem" }} />}
-                            />
-                        </Box>
-
-                        <Box>
                             {todo.repeat && (
                                 <Icon
                                     label="Delete Task"
-                                    onClick={() => dispatch(appViewActions.permanentlyDeleteTodo(todo.id))}
-                                    icon={<DeleteForeverIcon sx={{ fontSize: "2rem" }} />}
+                                    onClick={() => setShowModal(true)}
+                                    icon={<DeleteForeverIcon sx={{ fontSize: "2.5rem" }} />}
                                     type="caution"
                                 />
                             )}
@@ -91,6 +96,36 @@ const TodoList: React.FC = () => {
                     </StyledBoxFlexBetween>
 
                     <Divider />
+                    <Modal
+                        open={showModal}
+                        onClose={() => setShowModal(false)}
+                    >
+                        <StyledDeleteBox>
+                            <StyledTitle variant="h6" sx={{ fontSize: "1.2rem", mb: 1, color: "#ff0000" }}>
+                                Delete Task
+                            </StyledTitle>
+                            <StyledDescription sx={{ fontSize: "1rem", mb: 3 }}>
+                                Are you sure you want to delete this task?
+                            </StyledDescription>
+
+                            <StyledBoxFlexBetween>
+                                <Button
+                                    variant="contained"
+                                    sx={{ bgcolor: "#888", "&:hover": { bgcolor: "#777" } }}
+                                    onClick={() => setShowModal(false)}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    color="error"
+                                    variant="contained"
+                                    onClick={() => handleDeleteTodo(todo)}
+                                >
+                                    Delete
+                                </Button>
+                            </StyledBoxFlexBetween>
+                        </StyledDeleteBox>
+                    </Modal>
                 </Box>
             ))}
         </Card>

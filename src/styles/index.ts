@@ -62,3 +62,15 @@ export const StyledCard = styled(Box)(({ theme }) => ({
     padding: "8px 16px",
     borderRadius: "8px",
 }));
+
+export const StyledDeleteBox = styled(Box)(({ theme }) => ({
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    background: "#fff",
+    borderRadius: "6px",
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+    padding: "32px",
+    minWidth: "300px",
+}));
