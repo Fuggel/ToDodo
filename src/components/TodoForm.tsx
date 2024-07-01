@@ -46,6 +46,12 @@ const TodoForm: React.FC<Props> = ({
     const [dateError, setDateError] = useState<string | null>(null);
     const [windowWitdh, setWindowWidth] = useState(0);
 
+    const handleKeyPress = (button: string) => {
+        if (button === "{enter}") {
+            submitAction();
+        }
+    };
+
     useEffect(() => {
         if (startDate && endDate) {
             if (endDate.isBefore(startDate)) {
@@ -79,7 +85,7 @@ const TodoForm: React.FC<Props> = ({
                 {windowWitdh <= 750 &&
                     <Keyboard
                         onChange={(input) => setTask(input)}
-                        onKeyPress={submitAction}
+                        onKeyPress={handleKeyPress}
                     />
                 }
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
