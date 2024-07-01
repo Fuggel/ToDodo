@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { StyledBoxFlex, StyledBoxFlexWrapper } from "../styles";
 import Card from "./ui/Card";
 import { RepeatFrequency } from "../types/Todo";
+import { DATE_RANGES } from "../constants/date";
+import Keyboard from 'react-simple-keyboard';
+import "react-simple-keyboard/build/css/index.css";
 
 
 interface Props {
@@ -41,6 +44,7 @@ const TodoForm: React.FC<Props> = ({
 }) => {
     const navigate = useNavigate();
     const [dateError, setDateError] = useState<string | null>(null);
+    const [windowWitdh, setWindowWidth] = useState(0);
 
     useEffect(() => {
         if (startDate && endDate) {
@@ -52,6 +56,17 @@ const TodoForm: React.FC<Props> = ({
         }
     }, [startDate, endDate]);
 
+    useEffect(() => {
+        const updateWindowDimensions = () => {
+            const newWidth = window.innerWidth;
+            setWindowWidth(newWidth);
+        };
+
+        window.addEventListener("resize", updateWindowDimensions);
+
+        return () => window.removeEventListener("resize", updateWindowDimensions);
+    }, []);
+
     return (
         <Card>
             <StyledBoxFlexWrapper>
@@ -61,6 +76,12 @@ const TodoForm: React.FC<Props> = ({
                     onChange={(e) => setTask(e.target.value)}
                     multiline
                 />
+                {windowWitdh <= 750 &&
+                    <Keyboard
+                        onChange={(input) => setTask(input)}
+                        onKeyPress={submitAction}
+                    />
+                }
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
                     <DateTimePicker
                         disablePast
@@ -71,6 +92,21 @@ const TodoForm: React.FC<Props> = ({
                         referenceDate={dayjs().startOf("minute").add(1, "minute")}
                         onChange={(date) => setStartDate && setStartDate(date as Dayjs)}
                     />
+
+                    <StyledBoxFlex sx={{ mt: -2 }}>
+                        {DATE_RANGES.map((range) => (
+                            <Button
+                                key={range.label}
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                onClick={() => setStartDate && setStartDate(range.getRange()[0])}
+                            >
+                                {range.label}
+                            </Button>
+                        ))}
+                    </StyledBoxFlex>
+
                     <DateTimePicker
                         disablePast
                         label="End Date"
@@ -80,7 +116,31 @@ const TodoForm: React.FC<Props> = ({
                         referenceDate={dayjs().startOf("minute").add(1, "minute")}
                         onChange={(date) => setEndDate && setEndDate(date as Dayjs)}
                     />
+
+                    <StyledBoxFlex sx={{ mt: -2 }}>
+                        {DATE_RANGES.map((range) => (
+                            <Button
+                                key={range.label}
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                onClick={() => setEndDate && setEndDate(range.getRange()[0])}
+                            >
+                                {range.label}
+                            </Button>
+                        ))}
+                    </StyledBoxFlex>
                 </LocalizationProvider>
+
+                <TextField
+                    type="number"
+                    label="Repeat Interval"
+                    disabled={!startDate}
+                    value={repeatInterval || ""}
+                    onChange={(e) => setRepeatInterval && setRepeatInterval(parseInt(e.target.value, 10))}
+                    helperText="Every n times the task should be repeated. (e.g. 2 for every 2nd day)"
+                    inputProps={{ min: 1 }}
+                />
 
                 <TextField
                     select
@@ -94,15 +154,6 @@ const TodoForm: React.FC<Props> = ({
                     <MenuItem value={RepeatFrequency.Monthly}>Monthly</MenuItem>
                     <MenuItem value={RepeatFrequency.Yearly}>Yearly</MenuItem>
                 </TextField>
-
-                <TextField
-                    type="number"
-                    label="Repeat Interval"
-                    disabled={!startDate}
-                    value={repeatInterval || ""}
-                    onChange={(e) => setRepeatInterval && setRepeatInterval(parseInt(e.target.value, 10))}
-                    helperText="Every n times the task should repeated. (e.g. 2 for every 2nd day)"
-                />
 
                 {dateError && <Typography variant="body2" color="red">{dateError}</Typography>}
 
