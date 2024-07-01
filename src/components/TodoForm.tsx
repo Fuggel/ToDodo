@@ -44,7 +44,7 @@ const TodoForm: React.FC<Props> = ({
 }) => {
     const navigate = useNavigate();
     const [dateError, setDateError] = useState<string | null>(null);
-    const [windowWitdh, setWindowWidth] = useState(0);
+    const [windowWitdh, setWindowWidth] = useState(window.innerWidth);
 
     const handleKeyPress = (button: string) => {
         if (button === "{enter}") {
