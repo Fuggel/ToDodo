@@ -16,3 +16,8 @@ export enum RepeatFrequency {
     Monthly = "monthly",
     Yearly = "yearly",
 }
+
+export enum TodoTab {
+    BASIC = 0,
+    HIDDEN = 1,
+}

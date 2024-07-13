@@ -13,11 +13,11 @@ const EditTodo: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string; }>();
     const todo: Todo = useSelector((state: RootState) => selectTodoById(state, id as string));
-    const [task, setTask] = useState(todo.task);
+    const [task, setTask] = useState(todo?.task);
     const [startDate, setStartDate] = useState<Dayjs | null>(todo?.startDate ? dayjs(todo.startDate) : null);
     const [endDate, setEndDate] = useState<Dayjs | null>(todo?.endDate ? dayjs(todo.endDate) : null);
-    const [repeatFrequency, setRepeatFrequency] = useState<RepeatFrequency | undefined>(todo.repeat?.frequency);
-    const [repeatInterval, setRepeatInterval] = useState(todo.repeat?.interval);
+    const [repeatFrequency, setRepeatFrequency] = useState<RepeatFrequency | undefined>(todo?.repeat?.frequency);
+    const [repeatInterval, setRepeatInterval] = useState(todo?.repeat?.interval);
 
     useEffect(() => {
         if (todo) {

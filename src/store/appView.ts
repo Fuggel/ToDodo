@@ -93,5 +93,7 @@ const appViewSlice = createSlice({
 
 export const selectTodo = (state: RootState) => state.appView.todos;
 export const selectTodoById = (state: RootState, id: string) => state.appView.todos.find(todo => todo.id === id) as Todo;
+export const selectHiddenTodos = (state: RootState) => state.appView.hiddenTodos;
+
 export const appViewActions = appViewSlice.actions;
 export default appViewSlice.reducer;
